@@ -56,8 +56,12 @@ router.post('/deal_article',checkLogin,function(req,res,next){
     }
 })
 
-router.post('/get_index_data',function(req,res,next){
-    Promise.all([ArticleModel.getLength(),ArticleModel.getPosts(req.body)]).then(result=>{
+router.get('/get_index_data',function(req,res,next){
+    let opts = {
+        num:req.query.num || 5,
+        page:req.query.page || 0
+    }
+    Promise.all([ArticleModel.getLength(),ArticleModel.getPosts(opts)]).then(result=>{
         result[1].forEach(function(item,index){
             //截取部分内容
             let tempStr = item.content.replace(/<[^>]*>/ig,'').replace(/\&nbsp;/g,'');

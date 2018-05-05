@@ -7,25 +7,26 @@ var pkg = require('./package');
 var winston = require('winston');
 var expressWinston = require('express-winston');
 var cors = require('cors');
-var config = process.env.NODE_env === 'production' ? require('./config/production') : require('./config/development');
+var config = process.env.NODE_ENV === 'production' ? require('./config/production') : require('./config/development');
 var bodyParser = require('body-parser');
 // var multer = require('multer');
 require('winston-daily-rotate-file');
 
 
 var app = express();
-var whitelist = ['https://www.lcddjm.com', 'https://lcddjm.com','https://ssr.lcddjm.com','https://hobby.lcddjm.com']
-var corsOptions = {
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  }
-}
+var whitelist = process.env.NODE_ENV === 'production' ? ['https://www.lcddjm.com', 'https://lcddjm.com','https://ssr.lcddjm.com','https://hobby.lcddjm.com'] : ['http://localhost:8080'];
 
-process.env.NODE_ENV === 'production' ? app.use(cors(corsOptions)) : app.use(cors());
+var corsOptions = {
+	origin: function (origin, callback) {
+		if (whitelist.indexOf(origin) !== -1) {
+			callback(null, true)
+		} else {
+			callback(new Error('Not allowed by CORS'))
+		}
+	},
+	credentials:true,
+}
+app.use(cors(corsOptions))
 
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({
@@ -48,7 +49,8 @@ app.use(session({
 	resave: true, // 强制更新 session
 	saveUninitialized: false, // 设置为 false，强制创建一个 session，即使用户未登录
 	cookie: {
-		maxAge: config.session.maxAge // 过期时间，过期后 cookie 中的 session id 自动删除
+		maxAge: config.session.maxAge, // 过期时间，过期后 cookie 中的 session id 自动删除
+		domain:process.env.NODE_ENV === 'production' ? '.lcddjm.com' : ''
 	},
 	store: new MongoStore({ // 将 session 存储到 mongodb
 		url: config.mongodb // mongodb 地址
@@ -66,10 +68,10 @@ app.use(session({
 // 正常请求的日志
 app.use(expressWinston.logger({
 	transports: [
-		new winston.transports.Console({
-			json: true,
-			colorize: true
-		}),
+		// new winston.transports.Console({
+		// 	json: true,
+		// 	colorize: true
+		// }),
 		new winston.transports.DailyRotateFile({
 			dirname:__dirname + '/server/logs/',
 			filename: 'success.%DATE%.log',
@@ -80,10 +82,10 @@ app.use(expressWinston.logger({
 // 错误请求的日志
 app.use(expressWinston.errorLogger({
 	transports: [
-		new winston.transports.Console({
-			json: true,
-			colorize: true
-		}),
+		// new winston.transports.Console({
+		// 	json: true,
+		// 	colorize: true
+		// }),
 		new winston.transports.DailyRotateFile({
 			dirname:__dirname + '/server/logs/',
 			filename: 'error.%DATE%.log',

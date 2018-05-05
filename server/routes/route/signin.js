@@ -7,7 +7,6 @@ let UserModel = require('../../models/users');
 router.post('/',function(req, res, next) {
     let name = req.body.name;
     let password = req.body.password;
-  
     UserModel.getUserByName(name)
     .then(function (user) {
         if (!user) {
@@ -33,7 +32,14 @@ router.post('/',function(req, res, next) {
         })
        
     })
-    .catch(next);
+    .catch(err => {
+        return res.json({
+            'code':100,
+            'message':JSON.stringify(err)
+        })
+        // console.log(err);
+        // next();
+    });
   });
   
   module.exports = router;
