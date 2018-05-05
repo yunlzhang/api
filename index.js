@@ -14,11 +14,11 @@ require('winston-daily-rotate-file');
 
 
 var app = express();
-var whitelist = process.env.NODE_ENV === 'production' ? ['https://www.lcddjm.com', 'https://lcddjm.com','https://ssr.lcddjm.com','https://hobby.lcddjm.com'] : ['http://localhost:8080'];
+var whitelist = process.env.NODE_ENV === 'production' ? ['https://www.qiniu.com','https://www.lcddjm.com', 'https://lcddjm.com','https://ssr.lcddjm.com','https://hobby.lcddjm.com'] : ['http://localhost:8080'];
 
 var corsOptions = {
 	origin: function (origin, callback) {
-		if (whitelist.indexOf(origin) !== -1) {
+		if (whitelist.indexOf(origin) !== -1 || !origin) {
 			callback(null, true)
 		} else {
 			callback(new Error('Not allowed by CORS'))
