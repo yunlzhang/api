@@ -14,7 +14,7 @@ require('winston-daily-rotate-file');
 
 
 var app = express();
-var whitelist = process.env.NODE_ENV === 'production' ? ['https://www.qiniu.com','https://www.lcddjm.com', 'https://lcddjm.com','https://ssr.lcddjm.com','https://hobby.lcddjm.com'] : ['http://localhost:8080'];
+var whitelist = process.env.NODE_ENV === 'production' ? ['https://www.qiniu.com','https://www.lcddjm.com', 'https://lcddjm.com','https://ssr.lcddjm.com','https://hobby.lcddjm.com'] : ['http://localhost:8080',"http://localhost:3000"];
 
 var corsOptions = {
 	origin: function (origin, callback) {

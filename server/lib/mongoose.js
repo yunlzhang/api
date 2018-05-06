@@ -5,7 +5,7 @@ const moment = require('moment');
 const objectIdToTimestamp = require('objectid-to-timestamp');
 const Schema = mongoose.Schema;
 //model
-let User,Post,Comment;
+let User,Post,Comment,Gather,Tourist,Pictures;
 
 
 mongoose.connect(config.mongodb,{ keepAlive: 1, connectTimeoutMS: 30000 });
@@ -106,8 +106,104 @@ CommentSchema.index({article_id: 1,user_id:1,_id: 1})
 Comment = mongoose.model('Comment', CommentSchema);
 
 
+
+/**
+ * 
+ * Gather
+ * 
+ */
+
+const GatherSchema = Schema({
+    banner:[{
+        type:Schema.Types.ObjectId,
+        ref:"Picture"
+    }],
+    photos:[{
+        type:Schema.Types.ObjectId,
+        ref:"Picture"
+    }],
+    locations:[{
+        key:String,
+        _id:{
+            type:Schema.Types.ObjectId,
+            ref:"Tourist"
+        }
+    }],
+    times:[{
+        key:String,
+        _id:{
+            type:Schema.Types.ObjectId,
+            ref:"Tourist"
+        }
+    }],
+    photos_count:{
+        type:Number,
+        default:0
+    }
+})
+Gather = mongoose.model('Gather',GatherSchema)
+
+
+
+/**
+ * 
+ * Tourist
+ * 
+ */
+
+const TouristSchema = Schema({
+    author:Schema.Types.ObjectId,
+    location:String,
+    description:String,
+    time:String,
+    photos:[{
+        type:Schema.Types.ObjectId,
+        ref:"Picture"
+    }],
+    pv:{
+        type:Number,
+        default:0
+    },
+    created_at :{ 
+        type: Date, 
+        required: true, 
+        default: Date.now 
+    }
+})
+TouristSchema.set('autoIndex', false);
+TouristSchema.index({author: 1,_id: -1});
+Tourist = mongoose.model('Tourist',TouristSchema)
+
+/**
+ * 
+ * 图片
+ * 
+ */
+
+
+const PictureSchema = Schema({
+    src:{
+        type:String,
+        required:true
+    },
+    w:Number,
+    h:Number,
+    size:Number,
+    created_at :{ 
+        type: Date, 
+        required: true, 
+        default: Date.now 
+    }
+})
+PictureSchema.set('autoIndex', false);
+PictureSchema.index({author: 1,_id: -1});
+Picture = mongoose.model('Picture',PictureSchema)
+ 
 module.exports = {
     User,
     Post,
-    Comment
+    Comment,
+    Gather,
+    Tourist,
+    Picture
 }
