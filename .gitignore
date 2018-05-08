@@ -23,3 +23,4 @@ server/logs/
 server/config.js
 /qnimg
 config/production.js
+config/config.js
