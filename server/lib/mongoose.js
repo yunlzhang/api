@@ -15,6 +15,7 @@ mongoose.connect(config.mongodb,{ keepAlive: 1, connectTimeoutMS: 30000 });
  * 用户
  * 
  */
+
 const UserSchema = Schema({
     name: String,
 	password: String,
