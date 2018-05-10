@@ -106,7 +106,7 @@ router.get('/get_article',function(req,res){
     .then(function (result) {
         result.forEach(function(item,index){
             //截取部分内容
-            let tempStr = item.content.replace(/<[^>]*>/ig,'').replace(/\&nbsp;/g,'');
+            let tempStr = item.content.replace(/(<[^>]*>)|\s/g,'');
             result[index]['des'] = tempStr.slice(0,200) + '...';
             result[index]['created_at'] = moment(objectIdToTimestamp(item._id)).format('YYYY-MM-DD HH:mm')
             delete result[index]['content'];
