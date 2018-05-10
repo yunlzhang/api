@@ -8,7 +8,7 @@ module.exports = {
 	// 通过文章的id获取相关文章
 	getPostById(id) {
 		return Promise.all([
-			Post.find({ '_id': { '$gt': id } }).sort({_id: 1}).limit(1).lean(),					
+			Post.find({ '_id': { '$gt': id } },{title:1,_id:1}).sort({_id: 1}).limit(1).lean(),					
 			Post.findOne({_id: id})
 			.populate({
 				path:'comments',
@@ -41,7 +41,7 @@ module.exports = {
 				]
 			})
 			.lean(),
-			Post.find({'_id': { '$lt': id } }).sort({_id: -1}).limit(1).lean()
+			Post.find({'_id': { '$lt': id } },{title:1,_id:1}).sort({_id: -1}).limit(1).lean()
 		])
 	},
 	getPosts(opts) {
