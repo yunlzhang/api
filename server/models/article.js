@@ -111,5 +111,8 @@ module.exports = {
 		.skip(opts.page ? opts.page * opts.page : 0)		
 		.limit(opts.num ? Number(opts.num) : 5)
 		.lean();
+	},
+	getAll(){
+		return Post.find({},{_id:1});
 	}
 };

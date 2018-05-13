@@ -146,5 +146,22 @@ router.get('/get_article_detail',function(req,res){
     })
 });
 
+router.get('/get_all',function(req,res){
+    ArticleModel.getAll()
+    .then(function (result) {
+            
+        res.json({
+            code:200,
+            data:result,
+            message:'获取成功'
+        });
+    }).catch(e =>{
+        res.json({
+            code:100,
+            message:'获取失败'
+        });
+    })
+})
+
 
 module.exports = router;
