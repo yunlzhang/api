@@ -4,7 +4,7 @@ let multer  = require('multer')
 let fs = require('fs');
 let uuidV1 = require('uuid/v1');
  
-let upload = multer({ dest: './qnimg/' }).single('pic');
+let upload = multer({ dest: './qnimg/' }).single('file');
 router.post('/',function(req,res,next){
     if (!req.session.user && !req.headers.referer.match(/signup/)) {
         return res.json({
@@ -17,7 +17,7 @@ router.post('/',function(req,res,next){
         if (err) {
             res.json({
                 code:'100',
-                message:'上传出错'
+                message:JSON.stringify(err)
             })
             // An error occurred when uploading
             return;
